@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 37369239}
   - component: {fileID: 37369238}
   - component: {fileID: 37369237}
-  - component: {fileID: 37369241}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -228,24 +227,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &37369241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 37369236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc288f28cc5668543940b896b51b43f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  awnser:
-  - {fileID: 1848463093}
-  - {fileID: 1108778127}
-  - {fileID: 1525807633}
-  OPT1: {fileID: 294387648}
-  OPT2: {fileID: 1098768219}
 --- !u!1 &184959723
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,7 +310,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 37369241}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Controller, Assembly-CSharp
         m_MethodName: CheckAwnser
         m_Mode: 3
@@ -390,6 +371,7 @@ GameObject:
   - component: {fileID: 261379231}
   - component: {fileID: 261379230}
   - component: {fileID: 261379232}
+  - component: {fileID: 261379233}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -438,8 +420,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SerializedLibrary: {fileID: 11400000, guid: d5fdc5923813489458db3144e6a47915, type: 2}
-  m_MaxNumberOfMovingImages: 2
-  m_TrackedImagePrefab: {fileID: 3272476564399159406, guid: 4c49e32d688246b419245cf5c3ba0a97, type: 3}
+  m_MaxNumberOfMovingImages: 10
+  m_TrackedImagePrefab: {fileID: 0}
+--- !u!114 &261379233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261379229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc288f28cc5668543940b896b51b43f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  awnser:
+  - {fileID: 1848463093}
+  - {fileID: 1108778127}
+  - {fileID: 1525807633}
+  OPT1: {fileID: 294387648}
+  OPT2: {fileID: 1098768219}
+  prefabBase: {fileID: 3272476564399159406, guid: 4c49e32d688246b419245cf5c3ba0a97, type: 3}
+  cameraAR: {fileID: 1822273421}
+  m_TrackedImageManager: {fileID: 261379232}
 --- !u!1 &294387646
 GameObject:
   m_ObjectHideFlags: 0
@@ -497,7 +500,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 123456789
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
   m_sharedMaterial: {fileID: -2196432675354224573, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
@@ -723,7 +726,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 37369241}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Controller, Assembly-CSharp
         m_MethodName: CheckAwnser
         m_Mode: 3
@@ -856,7 +859,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 37369241}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Controller, Assembly-CSharp
         m_MethodName: CheckAwnser
         m_Mode: 3
@@ -963,7 +966,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 123456789
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
   m_sharedMaterial: {fileID: -2196432675354224573, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
@@ -1097,7 +1100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
   m_sharedMaterial: {fileID: -2196432675354224573, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
@@ -1324,7 +1327,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
   m_sharedMaterial: {fileID: -2196432675354224573, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
@@ -1713,7 +1716,7 @@ Camera:
   m_GameObject: {fileID: 1822273420}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1869,7 +1872,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
   m_sharedMaterial: {fileID: -2196432675354224573, guid: 2fa829fc9a4677a4892aad74438717fc, type: 2}
