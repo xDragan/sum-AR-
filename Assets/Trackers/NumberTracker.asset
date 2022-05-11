@@ -19,9 +19,9 @@ MonoBehaviour:
       m_GuidLow: 4793482489559465689
       m_GuidHigh: 9164496292989226637
     m_SerializedTextureGuid:
-      m_GuidLow: 8202312082336764632
-      m_GuidHigh: 4378168451528423577
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 8431895459857279507
+      m_GuidHigh: 1485459826364599337
+    m_Size: {x: 0.07, y: 0.089922026}
     m_SpecifySize: 1
     m_Name: number2
     m_Texture: {fileID: 0}
@@ -29,9 +29,9 @@ MonoBehaviour:
       m_GuidLow: 5449767264755813761
       m_GuidHigh: 10121830227874528917
     m_SerializedTextureGuid:
-      m_GuidLow: 3198882769764566719
-      m_GuidHigh: 5811006342271264906
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 10341572437465713805
+      m_GuidHigh: 765050811140963355
+    m_Size: {x: 0.07, y: 0.08996094}
     m_SpecifySize: 1
     m_Name: number3
     m_Texture: {fileID: 0}
@@ -39,9 +39,9 @@ MonoBehaviour:
       m_GuidLow: 5620456970896363156
       m_GuidHigh: 11454267548327365055
     m_SerializedTextureGuid:
-      m_GuidLow: 10963060306891700831
-      m_GuidHigh: 7126203692035395272
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 12237414065888770574
+      m_GuidHigh: 12717490221038442922
+    m_Size: {x: 0.07, y: 0.08996094}
     m_SpecifySize: 1
     m_Name: number1
     m_Texture: {fileID: 0}
@@ -49,9 +49,9 @@ MonoBehaviour:
       m_GuidLow: 4695861329281266367
       m_GuidHigh: 3228683347257723306
     m_SerializedTextureGuid:
-      m_GuidLow: 13935435094716895715
-      m_GuidHigh: 15265286040929197193
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 1919827528601751551
+      m_GuidHigh: 5795606375191063944
+    m_Size: {x: 0.07, y: 0.08996094}
     m_SpecifySize: 1
     m_Name: number4
     m_Texture: {fileID: 0}
@@ -59,9 +59,9 @@ MonoBehaviour:
       m_GuidLow: 5742757316962495203
       m_GuidHigh: 15822326199205951648
     m_SerializedTextureGuid:
-      m_GuidLow: 7076552126406674598
-      m_GuidHigh: 11848788580392859033
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 5743276393362059283
+      m_GuidHigh: 6884237359568915355
+    m_Size: {x: 0.07, y: 0.08974708}
     m_SpecifySize: 1
     m_Name: number5
     m_Texture: {fileID: 0}
@@ -69,9 +69,9 @@ MonoBehaviour:
       m_GuidLow: 5344511528931071588
       m_GuidHigh: 10426011021827829655
     m_SerializedTextureGuid:
-      m_GuidLow: 6333286901809284376
-      m_GuidHigh: 6833649930688369723
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 9841636285547634433
+      m_GuidHigh: 14382598110147483787
+    m_Size: {x: 0.07, y: 0.08996094}
     m_SpecifySize: 1
     m_Name: number6
     m_Texture: {fileID: 0}
@@ -79,9 +79,9 @@ MonoBehaviour:
       m_GuidLow: 5187702648637261268
       m_GuidHigh: 1323056076873477274
     m_SerializedTextureGuid:
-      m_GuidLow: 17358198370155471750
-      m_GuidHigh: 12625948249667048040
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 6315334410316962019
+      m_GuidHigh: 6668105870363011850
+    m_Size: {x: 0.07, y: 0.08955684}
     m_SpecifySize: 1
     m_Name: number7
     m_Texture: {fileID: 0}
@@ -89,9 +89,9 @@ MonoBehaviour:
       m_GuidLow: 5220868624215968627
       m_GuidHigh: 792646650067062953
     m_SerializedTextureGuid:
-      m_GuidLow: 15876358545163894226
-      m_GuidHigh: 4279734715587842234
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 5130798247994542814
+      m_GuidHigh: 3522469218567845064
+    m_Size: {x: 0.07, y: 0.08996094}
     m_SpecifySize: 1
     m_Name: number8
     m_Texture: {fileID: 0}
@@ -99,9 +99,19 @@ MonoBehaviour:
       m_GuidLow: 5298617925164162700
       m_GuidHigh: 2214856268364447903
     m_SerializedTextureGuid:
-      m_GuidLow: 8058218264229827439
-      m_GuidHigh: 17053119449129271723
-    m_Size: {x: 0.07, y: 0.07}
+      m_GuidLow: 16061110672085180213
+      m_GuidHigh: 17072585235922632427
+    m_Size: {x: 0.07, y: 0.0898062}
     m_SpecifySize: 1
     m_Name: number9
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5200819236043353775
+      m_GuidHigh: 8267214029605121982
+    m_SerializedTextureGuid:
+      m_GuidLow: 12237414065888770574
+      m_GuidHigh: 12717490221038442922
+    m_Size: {x: 0.07, y: 0.0898062}
+    m_SpecifySize: 1
+    m_Name: number1
     m_Texture: {fileID: 0}

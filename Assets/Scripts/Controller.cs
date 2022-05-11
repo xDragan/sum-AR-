@@ -1,7 +1,7 @@
+using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 
 using TMPro;
 using UnityEngine.XR.ARFoundation;
@@ -9,6 +9,8 @@ using UnityEngine.XR.ARFoundation;
 [RequireComponent(typeof(ARTrackedImageManager))]
 public class Controller : MonoBehaviour
 {
+    public static Controller Instance = null;
+
     public struct Operation
     {
         public int x, y, z;
@@ -22,13 +24,13 @@ public class Controller : MonoBehaviour
         }
     }
     [SerializeField] private TextMeshProUGUI[] awnser;
-    [SerializeField] private TextMeshProUGUI OPT1, OPT2;
+    [SerializeField] private TextMeshProUGUI OPT1, OPT2, ENDTEXT;
     [SerializeField] private GameObject prefabBase;
     [SerializeField] private Camera cameraAR;
 
     Dictionary<Guid, GameObject> m_Instantiated = new Dictionary<Guid, GameObject>();
     Dictionary<Guid, String> m_InstantiatedName = new Dictionary<Guid, String>();
-    HashSet<String> m_Cards = new HashSet<String>();
+    HashSet<Guid> m_Cards = new HashSet<Guid>();
 
     [SerializeField] ARTrackedImageManager m_TrackedImageManager;
 
@@ -36,14 +38,17 @@ public class Controller : MonoBehaviour
     int correctID;
     int contador = 0;
     bool firstTime = false;
+    int lastSum = 0;
 
     private void Awake()
     {
         Cubes.cc = this;
+        Instance = this;
     }
 
     void Start()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
     void OnEnable()
@@ -56,20 +61,33 @@ public class Controller : MonoBehaviour
     {
         m_TrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
     }
+    private UnityEngine.IEnumerator ClearText()
+    {
+        yield return new WaitForSeconds(2);
+        ENDTEXT.text = "";
+    }
 
     public void NewOp(int x, int y)
     {
+        if (x + y == lastSum)
+        {
+            return;
+        }
+
         op = new Operation();
         op = op.Addition(x,y);
 
+        lastSum = op.z;
 
         correctID = UnityEngine.Random.Range(0, 3);
         
         for(int i = 0; i < 3; i++)
         {
             var tmp = UnityEngine.Random.Range(2, 19);
-            while(tmp == op.z)
+            while (tmp == op.z)
+            {
                 tmp = UnityEngine.Random.Range(2, 19);
+            }
 
             awnser[i].text = tmp.ToString();
         }
@@ -79,17 +97,21 @@ public class Controller : MonoBehaviour
     public void CheckAwnser(int id)
     {
         if (id == correctID)
-            Debug.Log("CORRECT AWNSER!!!");
+        {
+            ENDTEXT.text = "¡¡¡¡BIEN!!! LO LOGRASTE";
+        }
         else
-            Debug.Log("FAILED AWNSER!!!");
-
-        
+        {
+            ENDTEXT.text = "NO PASA NADA, PRUEBA OTRO NUMERO";
+            StartCoroutine(ClearText());
+        }
     }
+
 
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventAR)
     {
-        contador++;
         String texto = "";
+        contador++;
 
         bool change = true;
         if (eventAR.added.Count > 0)
@@ -108,7 +130,7 @@ public class Controller : MonoBehaviour
                     prefab.SetActive(true);
                 }
                 m_InstantiatedName[trackedImage.referenceImage.guid] = trackedImage.referenceImage.name;
-                m_Cards.Add(trackedImage.referenceImage.name);
+                m_Cards.Add(trackedImage.referenceImage.guid);
                 texto += "-" + trackedImage.referenceImage.name;
             }
         }
@@ -121,44 +143,31 @@ public class Controller : MonoBehaviour
                 Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cameraAR);
                 foreach (var trackedImage in eventAR.updated)
                 {
-                    if (IsVisible(planes, trackedImage))
+                    texto += "--U:";
+                    if (trackedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
                     {
-                        texto += "--U:";
-                        if (trackedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
+                        if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
                         {
-                            if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
-                            {
-                                p.SetActive(true);
-                            }
-                            else
-                            {
-                                var prefab = Instantiate(prefabBase, trackedImage.transform);
-                                var cubes = prefab.GetComponent<Cubes>();
-                                cubes.EnableCubes(GetNumber(trackedImage.referenceImage.name));
-                                m_Instantiated[trackedImage.referenceImage.guid] = cubes.gameObject;
-                                prefab.SetActive(true);
-
-                            }
-                            m_Cards.Add(trackedImage.referenceImage.name);
-                        } else
+                            p.SetActive(true);
+                        }
+                        else
                         {
-                            texto += "--D:";
-                            if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
-                            {
-                                p.SetActive(false);
-                            }
-                            m_Cards.Remove(trackedImage.referenceImage.name);
+                            var prefab = Instantiate(prefabBase, trackedImage.transform);
+                            var cubes = prefab.GetComponent<Cubes>();
+                            cubes.EnableCubes(GetNumber(trackedImage.referenceImage.name));
+                            m_Instantiated[trackedImage.referenceImage.guid] = cubes.gameObject;
+                            prefab.SetActive(true);
 
                         }
-                    }
-                    else
+                        m_Cards.Add(trackedImage.referenceImage.guid);
+                    } else
                     {
                         texto += "--D:";
                         if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
                         {
                             p.SetActive(false);
                         }
-                        m_Cards.Remove(trackedImage.referenceImage.name);
+                        m_Cards.Remove(trackedImage.referenceImage.guid);
 
                     }
                     texto += "-" + trackedImage.referenceImage.name + "-" + trackedImage.trackingState.ToString();
@@ -171,50 +180,40 @@ public class Controller : MonoBehaviour
         }
 
 
-        change = true;
-        if (change)
-        {
-            ControlTexts(change, contador + "::" + texto);
-        }
+        ControlTexts(change, contador + "::" + texto);
 
-    }
-
-    private bool IsVisible(Plane[] planes, ARTrackedImage trackedImage)
-    {
-        return GeometryUtility.TestPlanesAABB(planes, GetBoundsFromImage(trackedImage));
-    }
-
-    private Bounds GetBoundsFromImage(ARTrackedImage trackedImage)
-    {
-
-        Bounds bounds = new Bounds(trackedImage.transform.position, new Vector3(trackedImage.size.x, 0, trackedImage.size.y));
-        return bounds;
     }
 
     private void ControlTexts(bool change, String texto)
     {
         //CleanMarcadores();
         //OPT1.text = texto;
-        var textos = m_Cards.ToList(); 
-
-        if (m_Cards.Count < 2)
+        var guids = m_Cards.ToList();
+        String textoIzquierda = "";
+        String textoDerecha = "";
+        if (guids.Count == 0)
         {
-            firstTime = false;
             CleanMarcadores();
-            if (m_Cards.Count > 0)
-            {
-                OPT1.text = textos[0].Substring(6);
-            }
+            return;
+        }
+        else if (guids.Count == 1)
+        {
+            CleanMarcadores();
+            textoIzquierda = m_InstantiatedName[guids[0]];
+            OPT1.text = textoIzquierda.Substring(6);
         }
         else
         {
-            OPT1.text = textos[0].Substring(6);
-            OPT2.text = textos[1].Substring(6);
-            if (change && !firstTime)
+            textoIzquierda = m_InstantiatedName[guids[0]];
+            textoDerecha = m_InstantiatedName[guids[1]];
+            if (isLeft(guids[1], guids[0]))
             {
-                firstTime = true;
-                NewOp(GetNumber(textos[0]), GetNumber(textos[1]));
+                textoIzquierda = m_InstantiatedName[guids[1]];
+                textoDerecha = m_InstantiatedName[guids[0]];
             }
+            OPT1.text = textoIzquierda.Substring(6);
+            OPT2.text = textoDerecha.Substring(6);
+            NewOp(GetNumber(textoIzquierda), GetNumber(textoDerecha));
         }
     }
 
@@ -223,10 +222,25 @@ public class Controller : MonoBehaviour
         awnser[0].text = "";
         awnser[1].text = "";
         awnser[2].text = "";
-
+        lastSum = 0;
         OPT1.text = "";
         OPT2.text = "";
+        ENDTEXT.text = "";
     }
+
+    bool isLeft(Guid guid0, Guid guid1)
+    {
+        var position0 = m_Instantiated[guid0].transform.position;
+        var position1 = m_Instantiated[guid1].transform.position;
+        return position0.x < position1.x;
+    }
+
+    String getCoordenada(Guid guid)
+    {
+        var position = m_Instantiated[guid].transform.position;
+        return "(" + position.x + "," + position.y + "," + position.z + ")";
+    }
+
 
     private int GetNumber(String name)
     {
