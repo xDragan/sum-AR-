@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.Collections;
 using TMPro;
 using UnityEngine.XR.ARFoundation;
 
@@ -61,7 +61,7 @@ public class Controller : MonoBehaviour
     {
         m_TrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
     }
-    private UnityEngine.IEnumerator ClearText()
+    IEnumerator ClearText()
     {
         yield return new WaitForSeconds(2);
         ENDTEXT.text = "";
