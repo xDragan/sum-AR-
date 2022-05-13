@@ -10,6 +10,5 @@ public class SumaButton : MonoBehaviour
     public void ClickButton()
     {
         Controller.Instance.CheckAwnser(index);
-
     }
 }

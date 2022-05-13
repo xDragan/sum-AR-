@@ -27,10 +27,12 @@ public class Controller : MonoBehaviour
     [SerializeField] private TextMeshProUGUI OPT1, OPT2, ENDTEXT;
     [SerializeField] private GameObject prefabBase;
     [SerializeField] private Camera cameraAR;
+    [SerializeField] private GameObject[] prefabs;
 
     Dictionary<Guid, GameObject> m_Instantiated = new Dictionary<Guid, GameObject>();
     Dictionary<Guid, String> m_InstantiatedName = new Dictionary<Guid, String>();
     HashSet<Guid> m_Cards = new HashSet<Guid>();
+    List<int> indexPrefabs;
 
     [SerializeField] ARTrackedImageManager m_TrackedImageManager;
 
@@ -44,6 +46,7 @@ public class Controller : MonoBehaviour
     {
         Cubes.cc = this;
         Instance = this;
+        indexPrefabs = Utils.RandomListOfInt(0, prefabs.Length, 9);
     }
 
     void Start()
@@ -99,10 +102,12 @@ public class Controller : MonoBehaviour
         if (id == correctID)
         {
             ENDTEXT.text = "　　BIEN!!! LO LOGRASTE";
+            //ENDTEXT.text = "　　BIEN!!! Lo lograste";
         }
         else
         {
             ENDTEXT.text = "NO PASA NADA, PRUEBA OTRO NUMERO";
+            //ENDTEXT.text = "No pasa nada, prueba otro numero";
             StartCoroutine(ClearText());
         }
     }
@@ -119,19 +124,26 @@ public class Controller : MonoBehaviour
             texto += "A:";
             change = true;
 
+            try { 
             foreach (var trackedImage in eventAR.added)
             {
                 if (!m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
                 {
-                    var prefab = Instantiate(prefabBase, trackedImage.transform);
-                    var cubes = prefab.GetComponent<Cubes>();
-                    cubes.EnableCubes(GetNumber(trackedImage.referenceImage.name));
-                    m_Instantiated[trackedImage.referenceImage.guid] = cubes.gameObject;
+                    var prefabIndex = indexPrefabs[GetNumber(trackedImage.referenceImage.name) - 1];
+                    var prefab = Instantiate(prefabs[prefabIndex], trackedImage.transform);
+                    var cubes = prefab.GetComponent<ObjectMesh>();
                     prefab.SetActive(true);
+                    cubes.CreateCubes(GetNumber(trackedImage.referenceImage.name));
+                    m_Instantiated[trackedImage.referenceImage.guid] = cubes.gameObject;
                 }
                 m_InstantiatedName[trackedImage.referenceImage.guid] = trackedImage.referenceImage.name;
                 m_Cards.Add(trackedImage.referenceImage.guid);
                 texto += "-" + trackedImage.referenceImage.name;
+            }
+            }
+            catch (Exception ex)
+            {
+                texto = "Error: " + ex.Message;
             }
         }
 
@@ -149,14 +161,17 @@ public class Controller : MonoBehaviour
                         if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
                         {
                             p.SetActive(true);
+                            var cubes = p.GetComponent<ObjectMesh>();
+                            cubes.EnableCubes();
                         }
                         else
                         {
-                            var prefab = Instantiate(prefabBase, trackedImage.transform);
-                            var cubes = prefab.GetComponent<Cubes>();
-                            cubes.EnableCubes(GetNumber(trackedImage.referenceImage.name));
-                            m_Instantiated[trackedImage.referenceImage.guid] = cubes.gameObject;
+                            var prefabIndex = indexPrefabs[GetNumber(trackedImage.referenceImage.name) - 1];
+                            var prefab = Instantiate(prefabs[prefabIndex], trackedImage.transform);
+                            var cubes = prefab.GetComponent<ObjectMesh>();
                             prefab.SetActive(true);
+                            cubes.CreateCubes(GetNumber(trackedImage.referenceImage.name));
+                            m_Instantiated[trackedImage.referenceImage.guid] = cubes.gameObject;
 
                         }
                         m_Cards.Add(trackedImage.referenceImage.guid);
@@ -165,6 +180,8 @@ public class Controller : MonoBehaviour
                         texto += "--D:";
                         if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
                         {
+                            var cubes = p.GetComponent<ObjectMesh>();
+                            cubes.DisableCubes();
                             p.SetActive(false);
                         }
                         m_Cards.Remove(trackedImage.referenceImage.guid);
@@ -184,10 +201,11 @@ public class Controller : MonoBehaviour
 
     }
 
+
     private void ControlTexts(bool change, String texto)
     {
         //CleanMarcadores();
-        //OPT1.text = texto;
+        //OPT2.text = texto;
         var guids = m_Cards.ToList();
         String textoIzquierda = "";
         String textoDerecha = "";
@@ -200,10 +218,17 @@ public class Controller : MonoBehaviour
         {
             CleanMarcadores();
             textoIzquierda = m_InstantiatedName[guids[0]];
-            OPT1.text = textoIzquierda.Substring(6);
+            if (m_Instantiated[guids[0]].transform.position.x < 0)
+            {
+                OPT1.text = textoIzquierda.Substring(6);
+            } else
+            {
+                OPT2.text = textoIzquierda.Substring(6);
+            }
         }
         else
         {
+           // ToggleButton(true);
             textoIzquierda = m_InstantiatedName[guids[0]];
             textoDerecha = m_InstantiatedName[guids[1]];
             if (isLeft(guids[1], guids[0]))
@@ -226,6 +251,14 @@ public class Controller : MonoBehaviour
         OPT1.text = "";
         OPT2.text = "";
         ENDTEXT.text = "";
+        //ToggleButton(false);
+    }
+
+    private void ToggleButton(bool active)
+    {
+        awnser[0].transform.parent.gameObject.SetActive(active);
+        awnser[1].transform.parent.gameObject.SetActive(active);
+        awnser[2].transform.parent.gameObject.SetActive(active);
     }
 
     bool isLeft(Guid guid0, Guid guid1)
@@ -244,7 +277,7 @@ public class Controller : MonoBehaviour
 
     private int GetNumber(String name)
     {
-        String number = name.Substring(6);
+        String number = name.Substring(name.Length - 1);
         return Int16.Parse(number);
     }
 

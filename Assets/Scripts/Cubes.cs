@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Cubes : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class Cubes : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             cubes[i].SetActive(true);
+            cubes[i].transform.DOScale(0.06f, 3f);
         }
     }
 
