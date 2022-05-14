@@ -98,7 +98,7 @@ public class Controller : MonoBehaviour
     {
         if (id == correctID)
         {
-            endMessage.text = "　　BIEN!!! LO LOGRASTE";
+            endMessage.text = "　　BIEN!!! LO LOGRASTE. ";
         }
         else
         {

@@ -62,12 +62,8 @@ public class ObjectMesh : MonoBehaviour
     {
         for (int i = 0; i < numberOfCubes; i++)
         {
-            if (visible)
-            {
-                break;
-            }
             positions[i].transform.DOScale(finalScale, 1f);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.0f);
         }
         visible = true;
     }
@@ -82,5 +78,4 @@ public class ObjectMesh : MonoBehaviour
             visible = false;
         }
     }
-
 }
