@@ -23,28 +23,25 @@ public class Controller : MonoBehaviour
             return op;
         }
     }
+
     [SerializeField] private TextMeshProUGUI[] awnser;
-    [SerializeField] private TextMeshProUGUI OPT1, OPT2, ENDTEXT;
-    [SerializeField] private GameObject prefabBase;
-    [SerializeField] private Camera cameraAR;
+    [SerializeField] private TextMeshProUGUI firstNumber, secondNumber, sign, endMessage;
     [SerializeField] private GameObject[] prefabs;
+    [SerializeField] ARTrackedImageManager m_TrackedImageManager;
 
     Dictionary<Guid, GameObject> m_Instantiated = new Dictionary<Guid, GameObject>();
     Dictionary<Guid, String> m_InstantiatedName = new Dictionary<Guid, String>();
     HashSet<Guid> m_Cards = new HashSet<Guid>();
     List<int> indexPrefabs;
 
-    [SerializeField] ARTrackedImageManager m_TrackedImageManager;
 
     Operation op;
     int correctID;
     int contador = 0;
-    bool firstTime = false;
     int lastSum = 0;
 
     private void Awake()
     {
-        Cubes.cc = this;
         Instance = this;
         indexPrefabs = Utils.RandomListOfInt(0, prefabs.Length, 9);
     }
@@ -67,7 +64,7 @@ public class Controller : MonoBehaviour
     IEnumerator ClearText()
     {
         yield return new WaitForSeconds(2);
-        ENDTEXT.text = "";
+        endMessage.text = "";
     }
 
     public void NewOp(int x, int y)
@@ -101,13 +98,11 @@ public class Controller : MonoBehaviour
     {
         if (id == correctID)
         {
-            ENDTEXT.text = "　　BIEN!!! LO LOGRASTE";
-            //ENDTEXT.text = "　　BIEN!!! Lo lograste";
+            endMessage.text = "　　BIEN!!! LO LOGRASTE";
         }
         else
         {
-            ENDTEXT.text = "NO PASA NADA, PRUEBA OTRO NUMERO";
-            //ENDTEXT.text = "No pasa nada, prueba otro numero";
+            endMessage.text = "NO PASA NADA, PRUEBA OTRO NUMERO";
             StartCoroutine(ClearText());
         }
     }
@@ -152,7 +147,6 @@ public class Controller : MonoBehaviour
             try
             {
                 change = true;
-                Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cameraAR);
                 foreach (var trackedImage in eventAR.updated)
                 {
                     texto += "--U:";
@@ -220,15 +214,15 @@ public class Controller : MonoBehaviour
             textoIzquierda = m_InstantiatedName[guids[0]];
             if (m_Instantiated[guids[0]].transform.position.x < 0)
             {
-                OPT1.text = textoIzquierda.Substring(6);
+                firstNumber.text = textoIzquierda.Substring(6);
             } else
             {
-                OPT2.text = textoIzquierda.Substring(6);
+                secondNumber.text = textoIzquierda.Substring(6);
             }
         }
         else
         {
-           // ToggleButton(true);
+            ToggleButton(true);
             textoIzquierda = m_InstantiatedName[guids[0]];
             textoDerecha = m_InstantiatedName[guids[1]];
             if (isLeft(guids[1], guids[0]))
@@ -236,8 +230,9 @@ public class Controller : MonoBehaviour
                 textoIzquierda = m_InstantiatedName[guids[1]];
                 textoDerecha = m_InstantiatedName[guids[0]];
             }
-            OPT1.text = textoIzquierda.Substring(6);
-            OPT2.text = textoDerecha.Substring(6);
+            firstNumber.text = textoIzquierda.Substring(6);
+            secondNumber.text = textoDerecha.Substring(6);
+            sign.text = "+";
             NewOp(GetNumber(textoIzquierda), GetNumber(textoDerecha));
         }
     }
@@ -248,17 +243,22 @@ public class Controller : MonoBehaviour
         awnser[1].text = "";
         awnser[2].text = "";
         lastSum = 0;
-        OPT1.text = "";
-        OPT2.text = "";
-        ENDTEXT.text = "";
-        //ToggleButton(false);
+        firstNumber.text = "";
+        secondNumber.text = "";
+        sign.text = "";
+        endMessage.text = "";
+        ToggleButton(false);
     }
 
     private void ToggleButton(bool active)
     {
+        awnser[0].transform.parent.transform.parent.gameObject.SetActive(active);
         awnser[0].transform.parent.gameObject.SetActive(active);
         awnser[1].transform.parent.gameObject.SetActive(active);
         awnser[2].transform.parent.gameObject.SetActive(active);
+        awnser[0].gameObject.SetActive(active);
+        awnser[1].gameObject.SetActive(active);
+        awnser[2].gameObject.SetActive(active);
     }
 
     bool isLeft(Guid guid0, Guid guid1)

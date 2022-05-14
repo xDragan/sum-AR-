@@ -21,14 +21,13 @@ public class ObjectMesh : MonoBehaviour
             finalScale = FINAL_SCALE;
         }
     }
-    IEnumerator Start()
+    void Start()
     {
         foreach (GameObject go in positions)
         {
             go.transform.localScale = Vector3.one * INITIAL_SCALE;
             go.SetActive(false);
         }
-        yield return new WaitForSeconds(0.5f);
     }
 
     public void CreateCubes(int amount)
@@ -46,23 +45,32 @@ public class ObjectMesh : MonoBehaviour
             var og = Instantiate(prefab, positions[i].transform);
             og.transform.Rotate(initialRotation);
             og.transform.localPosition += initialTranslation;
-            positions[i].transform.DOScale(finalScale, 3f);
         }
-        visible = true;
+        visible = false;
+        StartCoroutine(EnableCube(0));
     }
 
     public void EnableCubes()
     {
         if (!visible)
         {
-            for (int i = 0; i < numberOfCubes; i++)
-            {
-                positions[i].transform.DOScale(finalScale, 3f);
-            }
-            visible = true;
+            StartCoroutine(EnableCube(0));
         }
     }
 
+    private IEnumerator EnableCube(int index)
+    {
+        for (int i = 0; i < numberOfCubes; i++)
+        {
+            if (visible)
+            {
+                break;
+            }
+            positions[i].transform.DOScale(finalScale, 1f);
+            yield return new WaitForSeconds(1f);
+        }
+        visible = true;
+    }
     public void DisableCubes()
     {
         if (visible)
