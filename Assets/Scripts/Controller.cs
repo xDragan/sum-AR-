@@ -24,6 +24,9 @@ public class Controller : MonoBehaviour
         }
     }
 
+    [SerializeField] private AudioListener speaker;
+    [SerializeField] private AudioClip[] numbers;
+    [SerializeField] private AudioClip sum;
     [SerializeField] private TextMeshProUGUI[] awnser;
     [SerializeField] private TextMeshProUGUI firstNumber, secondNumber, sign, endMessage;
     [SerializeField] private GameObject[] prefabs;

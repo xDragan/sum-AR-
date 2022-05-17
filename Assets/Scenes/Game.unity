@@ -447,6 +447,8 @@ GameObject:
   - component: {fileID: 261379230}
   - component: {fileID: 261379232}
   - component: {fileID: 261379233}
+  - component: {fileID: 261379234}
+  - component: {fileID: 261379235}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -509,6 +511,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc288f28cc5668543940b896b51b43f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speaker: {fileID: 0}
+  numbers:
+  - {fileID: 8300000, guid: 1aea9079a87e44c4a9b6cd756c68bf22, type: 3}
+  - {fileID: 8300000, guid: a51eb44c301458941b6d2e566ea55a4b, type: 3}
+  - {fileID: 8300000, guid: 834ab577ca0e3aa479eb71cdc9564bb4, type: 3}
+  - {fileID: 8300000, guid: 60caf11871c21a64db4943082b65a1ec, type: 3}
+  - {fileID: 8300000, guid: 4bc619480590eb441a93c128650336df, type: 3}
+  - {fileID: 8300000, guid: 5b116b95b92bc6d48b86d95c89f0b0eb, type: 3}
+  - {fileID: 8300000, guid: c6c0df906c007f54eb9758c1b9c92187, type: 3}
+  - {fileID: 8300000, guid: 1a3582d7a41b0ec40b8a4b6d17d534bc, type: 3}
+  - {fileID: 8300000, guid: 760507f9894aef441b0c65838eeb7d97, type: 3}
+  sum: {fileID: 8300000, guid: 375147992b3778444b74a8a5cddc658c, type: 3}
   awnser:
   - {fileID: 1848463093}
   - {fileID: 1108778127}
@@ -523,6 +537,110 @@ MonoBehaviour:
   - {fileID: 4886927903540261009, guid: 46d31972aa6f13149b89a64935689dc0, type: 3}
   - {fileID: 8201303155109422860, guid: 0103a9cb32c15d0439ca7ff62510cff6, type: 3}
   m_TrackedImageManager: {fileID: 261379232}
+--- !u!81 &261379234
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261379229}
+  m_Enabled: 1
+--- !u!82 &261379235
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261379229}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &290526304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1143,8 +1261,9 @@ GameObject:
   - component: {fileID: 668487546}
   - component: {fileID: 668487548}
   - component: {fileID: 668487547}
+  - component: {fileID: 668487549}
   m_Layer: 5
-  m_Name: Image1
+  m_Name: ThinkingLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1166,7 +1285,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -253, y: -139.00006}
+  m_AnchoredPosition: {x: -253, y: -139}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &668487547
@@ -1207,6 +1326,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 668487545}
   m_CullTransparentMesh: 1
+--- !u!95 &668487549
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668487545}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d5bf7704528fa1d4e8e6af05c7930b70, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &807928583
 GameObject:
   m_ObjectHideFlags: 0
@@ -2526,8 +2664,9 @@ GameObject:
   - component: {fileID: 2124180601}
   - component: {fileID: 2124180603}
   - component: {fileID: 2124180602}
+  - component: {fileID: 2124180604}
   m_Layer: 5
-  m_Name: Image1 (1)
+  m_Name: ThinkingRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2540,13 +2679,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124180600}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 237925425}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 273, y: -139.00006}
@@ -2590,3 +2729,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124180600}
   m_CullTransparentMesh: 1
+--- !u!95 &2124180604
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124180600}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d5bf7704528fa1d4e8e6af05c7930b70, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
