@@ -238,6 +238,7 @@ GameObject:
   - component: {fileID: 184959726}
   - component: {fileID: 184959725}
   - component: {fileID: 184959728}
+  - component: {fileID: 184959729}
   m_Layer: 5
   m_Name: Awnser (2)
   m_TagString: Untagged
@@ -372,6 +373,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 2
+--- !u!95 &184959729
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184959723}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b6814cb5dda49f6458b82fc4ecd01ecc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &237925424
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +407,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &237925425
 RectTransform:
   m_ObjectHideFlags: 0
@@ -924,6 +944,7 @@ GameObject:
   - component: {fileID: 394534791}
   - component: {fileID: 394534790}
   - component: {fileID: 394534793}
+  - component: {fileID: 394534794}
   m_Layer: 5
   m_Name: Awnser
   m_TagString: Untagged
@@ -1058,6 +1079,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
+--- !u!95 &394534794
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394534788}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b6814cb5dda49f6458b82fc4ecd01ecc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &505550970
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,6 +1111,7 @@ GameObject:
   - component: {fileID: 505550973}
   - component: {fileID: 505550972}
   - component: {fileID: 505550975}
+  - component: {fileID: 505550976}
   m_Layer: 5
   m_Name: Awnser (1)
   m_TagString: Untagged
@@ -1205,6 +1246,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 1
+--- !u!95 &505550976
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505550970}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b6814cb5dda49f6458b82fc4ecd01ecc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &668487545
 GameObject:
   m_ObjectHideFlags: 0
