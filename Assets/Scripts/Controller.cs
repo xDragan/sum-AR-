@@ -214,14 +214,7 @@ public class Controller : MonoBehaviour
         else if (guids.Count == 1)
         {
             CleanMarcadores();
-            textoIzquierda = m_InstantiatedName[guids[0]];
-            if (m_Instantiated[guids[0]].transform.position.x < 0)
-            {
-                firstNumber.text = textoIzquierda.Substring(6);
-            } else
-            {
-                secondNumber.text = textoIzquierda.Substring(6);
-            }
+            sign.text = m_InstantiatedName[guids[0]].Substring(6);
         }
         else
         {
