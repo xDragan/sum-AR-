@@ -42,12 +42,18 @@ public class Controller : MonoBehaviour
     int correctID;
     int contador = 0;
     int lastSum = 0;
+    bool flag;
+
+    int lastNumb1, lastNumb2;
 
     private void Awake()
     {
+        flag = false;
         SumaButton.cc = this;
         Instance = this;
         indexPrefabs = Utils.RandomListOfInt(0, prefabs.Length, 9);
+
+        lastNumb1 = lastNumb2 = -1;
     }
 
     void Start()
@@ -219,29 +225,42 @@ public class Controller : MonoBehaviour
         }
         else
         {
-            ToggleButton(true);
-            textoIzquierda = m_InstantiatedName[guids[0]];
-            textoDerecha = m_InstantiatedName[guids[1]];
-            if (isLeft(guids[1], guids[0]))
+            if(lastNumb1 == -1 || lastNumb2 == -1)
             {
-                textoIzquierda = m_InstantiatedName[guids[1]];
-                textoDerecha = m_InstantiatedName[guids[0]];
+                ToggleButton(true);
+                textoIzquierda = m_InstantiatedName[guids[0]];
+                textoDerecha = m_InstantiatedName[guids[1]];
+                if (isLeft(guids[1], guids[0]))
+                {
+                    textoIzquierda = m_InstantiatedName[guids[1]];
+                    textoDerecha = m_InstantiatedName[guids[0]];
+                }
+                firstNumber.text = GetNumber(textoIzquierda).ToString();
+                secondNumber.text = GetNumber(textoDerecha).ToString();
+
+                lastNumb1 = GetNumber(textoIzquierda);
+                lastNumb2 = GetNumber(textoDerecha);
+                sign.text = "+";
+                StartCoroutine(AudioNumber(GetNumber(textoIzquierda), GetNumber(textoDerecha)));
+                NewOp(GetNumber(textoIzquierda), GetNumber(textoDerecha));
+
             }
-            firstNumber.text = GetNumber(textoIzquierda).ToString();
-            secondNumber.text = GetNumber(textoDerecha).ToString();
-            sign.text = "+";
-            StartCoroutine(AudioNumber(GetNumber(textoIzquierda), GetNumber(textoDerecha)));
-            NewOp(GetNumber(textoIzquierda), GetNumber(textoDerecha));
         }
     }
 
     IEnumerator AudioNumber(int n1, int n2)
     {
-        speaker.PlayOneShot(numbers[n1]);
-        yield return new WaitForSeconds(0.65f);
-        speaker.PlayOneShot(sum);
-        yield return new WaitForSeconds(0.65f);
-        speaker.PlayOneShot(numbers[n2]);
+        if(!flag)
+        {
+            flag = true;
+            speaker.PlayOneShot(numbers[n1]);
+            yield return new WaitForSeconds(0.65f);
+            speaker.PlayOneShot(sum);
+            yield return new WaitForSeconds(0.65f);
+            speaker.PlayOneShot(numbers[n2]);
+            flag = false;
+        }
+
     }
 
     private void CleanMarcadores()
@@ -255,6 +274,7 @@ public class Controller : MonoBehaviour
         sign.text = "";
         endMessage.text = "";
         ToggleButton(false);
+        lastNumb1 = lastNumb2 = -1;
     }
 
     private void ToggleButton(bool active)

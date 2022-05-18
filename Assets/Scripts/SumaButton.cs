@@ -25,6 +25,7 @@ public class SumaButton : MonoBehaviour
     {
         cc.speaker.PlayOneShot(cc.numbers[n1]);
         yield return new WaitForSeconds(0.65f);
+        cc.speaker.Stop();
         cc.speaker.PlayOneShot(cc.sum);
         yield return new WaitForSeconds(0.65f);
         cc.speaker.PlayOneShot(cc.numbers[n2]);
