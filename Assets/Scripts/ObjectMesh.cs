@@ -47,18 +47,18 @@ public class ObjectMesh : MonoBehaviour
             og.transform.localPosition += initialTranslation;
         }
         visible = false;
-        StartCoroutine(EnableCube(0));
+        StartCoroutine(EnableCube());
     }
 
     public void EnableCubes()
     {
         if (!visible)
         {
-            StartCoroutine(EnableCube(0));
+            StartCoroutine(EnableCube());
         }
     }
 
-    private IEnumerator EnableCube(int index)
+    private IEnumerator EnableCube()
     {
         for (int i = 0; i < numberOfCubes; i++)
         {
