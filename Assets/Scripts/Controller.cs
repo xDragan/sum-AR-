@@ -24,9 +24,9 @@ public class Controller : MonoBehaviour
         }
     }
 
-    [SerializeField] private AudioSource speaker;
-    [SerializeField] private AudioClip[] numbers;
-    [SerializeField] private AudioClip sum;
+    [SerializeField] public AudioSource speaker;
+    [SerializeField] public AudioClip[] numbers;
+    [SerializeField] public AudioClip sum;
     [SerializeField] private TextMeshProUGUI[] awnser;
     [SerializeField] private TextMeshProUGUI firstNumber, secondNumber, sign, endMessage;
     [SerializeField] private GameObject[] prefabs;
@@ -45,6 +45,7 @@ public class Controller : MonoBehaviour
 
     private void Awake()
     {
+        SumaButton.cc = this;
         Instance = this;
         indexPrefabs = Utils.RandomListOfInt(0, prefabs.Length, 9);
     }
