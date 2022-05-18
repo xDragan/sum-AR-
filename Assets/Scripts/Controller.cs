@@ -24,7 +24,7 @@ public class Controller : MonoBehaviour
         }
     }
 
-    [SerializeField] private AudioListener speaker;
+    [SerializeField] private AudioSource speaker;
     [SerializeField] private AudioClip[] numbers;
     [SerializeField] private AudioClip sum;
     [SerializeField] private TextMeshProUGUI[] awnser;
@@ -226,11 +226,21 @@ public class Controller : MonoBehaviour
                 textoIzquierda = m_InstantiatedName[guids[1]];
                 textoDerecha = m_InstantiatedName[guids[0]];
             }
-            firstNumber.text = textoIzquierda.Substring(6);
-            secondNumber.text = textoDerecha.Substring(6);
+            firstNumber.text = GetNumber(textoIzquierda).ToString();
+            secondNumber.text = GetNumber(textoDerecha).ToString();
             sign.text = "+";
+            StartCoroutine(AudioNumber(GetNumber(textoIzquierda), GetNumber(textoDerecha)));
             NewOp(GetNumber(textoIzquierda), GetNumber(textoDerecha));
         }
+    }
+
+    IEnumerator AudioNumber(int n1, int n2)
+    {
+        speaker.PlayOneShot(numbers[n1]);
+        yield return new WaitForSeconds(0.65f);
+        speaker.PlayOneShot(sum);
+        yield return new WaitForSeconds(0.65f);
+        speaker.PlayOneShot(numbers[n2]);
     }
 
     private void CleanMarcadores()
