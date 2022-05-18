@@ -227,6 +227,8 @@ public class Controller : MonoBehaviour
         {
             if(lastNumb1 == -1 || lastNumb2 == -1)
             {
+                lastNumb1 = GetNumber(textoIzquierda);
+                lastNumb2 = GetNumber(textoDerecha);
                 ToggleButton(true);
                 textoIzquierda = m_InstantiatedName[guids[0]];
                 textoDerecha = m_InstantiatedName[guids[1]];
@@ -238,8 +240,6 @@ public class Controller : MonoBehaviour
                 firstNumber.text = GetNumber(textoIzquierda).ToString();
                 secondNumber.text = GetNumber(textoDerecha).ToString();
 
-                lastNumb1 = GetNumber(textoIzquierda);
-                lastNumb2 = GetNumber(textoDerecha);
                 sign.text = "+";
                 StartCoroutine(AudioNumber(GetNumber(textoIzquierda), GetNumber(textoDerecha)));
                 NewOp(GetNumber(textoIzquierda), GetNumber(textoDerecha));
@@ -253,11 +253,11 @@ public class Controller : MonoBehaviour
         if(!flag)
         {
             flag = true;
-            speaker.PlayOneShot(numbers[n1]);
+            speaker.PlayOneShot(numbers[n1 - 1]);
             yield return new WaitForSeconds(0.65f);
             speaker.PlayOneShot(sum);
             yield return new WaitForSeconds(0.65f);
-            speaker.PlayOneShot(numbers[n2]);
+            speaker.PlayOneShot(numbers[n2 - 1]);
             flag = false;
         }
 
