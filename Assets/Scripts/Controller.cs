@@ -25,6 +25,8 @@ public class Controller : MonoBehaviour
     }
 
     [Header("Result")]
+
+    [Header("Result")]
     [SerializeField] private GameObject win, lose;
 
     [SerializeField] public AudioSource speaker;
@@ -34,12 +36,14 @@ public class Controller : MonoBehaviour
     [SerializeField] private TextMeshProUGUI firstNumber, secondNumber, sign, endMessage;
     [SerializeField] private GameObject[] prefabs;
     [SerializeField] ARTrackedImageManager m_TrackedImageManager;
+    [SerializeField] private Camera arCamera;
 
     Dictionary<Guid, GameObject> m_Instantiated = new Dictionary<Guid, GameObject>();
     Dictionary<Guid, String> m_InstantiatedName = new Dictionary<Guid, String>();
     HashSet<Guid> m_Cards = new HashSet<Guid>();
     List<int> indexPrefabs;
 
+    private ParticleSystem confetti;
 
     Operation op;
     int correctID;
@@ -52,10 +56,9 @@ public class Controller : MonoBehaviour
     private void Awake()
     {
         flag = false;
-        SumaButton.cc = this;
         Instance = this;
         indexPrefabs = Utils.RandomListOfInt(0, prefabs.Length, 9);
-
+        confetti = win.GetComponentInChildren<ParticleSystem>();
         lastNumb1 = lastNumb2 = -1;
     }
 
@@ -69,7 +72,14 @@ public class Controller : MonoBehaviour
         m_TrackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
     }
 
-    
+    private void Update()
+    {
+        if (win.active && confetti)
+        {
+            confetti.transform.position = arCamera.transform.position + arCamera.transform.forward * 1.0f +  arCamera.transform.up * 0.7f;
+        }
+    }
+
     void OnDisable()
     {
         m_TrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
@@ -231,8 +241,6 @@ public class Controller : MonoBehaviour
         {
             if(lastNumb1 == -1 || lastNumb2 == -1)
             {
-                lastNumb1 = GetNumber(textoIzquierda);
-                lastNumb2 = GetNumber(textoDerecha);
                 ToggleButton(true);
                 textoIzquierda = m_InstantiatedName[guids[0]];
                 textoDerecha = m_InstantiatedName[guids[1]];
@@ -243,7 +251,8 @@ public class Controller : MonoBehaviour
                 }
                 firstNumber.text = GetNumber(textoIzquierda).ToString();
                 secondNumber.text = GetNumber(textoDerecha).ToString();
-
+                lastNumb1 = GetNumber(textoIzquierda);
+                lastNumb2 = GetNumber(textoDerecha);
                 sign.text = "+";
                 StartCoroutine(AudioNumber(GetNumber(textoIzquierda), GetNumber(textoDerecha)));
                 NewOp(GetNumber(textoIzquierda), GetNumber(textoDerecha));
