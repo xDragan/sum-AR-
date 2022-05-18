@@ -24,6 +24,9 @@ public class Controller : MonoBehaviour
         }
     }
 
+    [Header("Result")]
+    [SerializeField] private GameObject win, lose;
+
     [SerializeField] public AudioSource speaker;
     [SerializeField] public AudioClip[] numbers;
     [SerializeField] public AudioClip sum;
@@ -74,7 +77,8 @@ public class Controller : MonoBehaviour
     IEnumerator ClearText()
     {
         yield return new WaitForSeconds(2);
-        endMessage.text = "";
+        lose.SetActive(false);
+        //endMessage.text = "";
     }
 
     public void NewOp(int x, int y)
@@ -108,11 +112,11 @@ public class Controller : MonoBehaviour
     {
         if (id == correctID)
         {
-            endMessage.text = "¡¡¡¡BIEN!!! LO LOGRASTE. ";
+            win.SetActive(true);
         }
         else
         {
-            endMessage.text = "NO PASA NADA, PRUEBA OTRO NUMERO";
+            lose.SetActive(true);
             StartCoroutine(ClearText());
         }
     }
@@ -275,6 +279,8 @@ public class Controller : MonoBehaviour
         endMessage.text = "";
         ToggleButton(false);
         lastNumb1 = lastNumb2 = -1;
+        win.SetActive(false);
+        lose.SetActive(false);
     }
 
     private void ToggleButton(bool active)
