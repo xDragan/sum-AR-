@@ -17,7 +17,16 @@ public class SumaButton : MonoBehaviour
     public void ClickButton()
     {
         anim.Play("AwnserClickButton");
-        cc.speaker.PlayOneShot(cc.numbers[0]);
+        StartCoroutine(AudioNumber(1, 2));
         Controller.Instance.CheckAwnser(index);
+    }
+
+    IEnumerator AudioNumber(int n1, int n2)
+    {
+        cc.speaker.PlayOneShot(cc.numbers[n1]);
+        yield return new WaitForSeconds(0.65f);
+        cc.speaker.PlayOneShot(cc.sum);
+        yield return new WaitForSeconds(0.65f);
+        cc.speaker.PlayOneShot(cc.numbers[n2]);
     }
 }
