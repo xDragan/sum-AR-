@@ -25,15 +25,22 @@ public class Controller : MonoBehaviour
     }
 
     [Header("Result")]
+    [SerializeField] private GameObject win;
+    [SerializeField] private GameObject lose;
 
-    [Header("Result")]
-    [SerializeField] private GameObject win, lose;
-
+    [Header("Audio")]
     [SerializeField] public AudioSource speaker;
     [SerializeField] public AudioClip[] numbers;
     [SerializeField] public AudioClip sum;
+    [SerializeField] public AudioClip audioWin;
+    [SerializeField] public AudioClip audioLose;
+
+
+    [Header("Canvas")]
     [SerializeField] private TextMeshProUGUI[] awnser;
     [SerializeField] private TextMeshProUGUI firstNumber, secondNumber, sign, endMessage;
+
+    [Header("Images")]
     [SerializeField] private GameObject[] prefabs;
     [SerializeField] ARTrackedImageManager m_TrackedImageManager;
     [SerializeField] private Camera arCamera;
@@ -43,6 +50,7 @@ public class Controller : MonoBehaviour
     HashSet<Guid> m_Cards = new HashSet<Guid>();
     List<int> indexPrefabs;
 
+    private int numberCounter;
     private ParticleSystem confetti;
 
     Operation op;
@@ -60,6 +68,7 @@ public class Controller : MonoBehaviour
         indexPrefabs = Utils.RandomListOfInt(0, prefabs.Length, 9);
         confetti = win.GetComponentInChildren<ParticleSystem>();
         lastNumb1 = lastNumb2 = -1;
+        numberCounter = 0;
     }
 
     void Start()
@@ -74,7 +83,7 @@ public class Controller : MonoBehaviour
 
     private void Update()
     {
-        if (win.active && confetti)
+        if (win.activeSelf && confetti)
         {
             confetti.transform.position = arCamera.transform.position + arCamera.transform.forward * 1.0f +  arCamera.transform.up * 0.7f;
         }
@@ -84,11 +93,11 @@ public class Controller : MonoBehaviour
     {
         m_TrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
     }
+
     IEnumerator ClearText()
     {
         yield return new WaitForSeconds(2);
         lose.SetActive(false);
-        //endMessage.text = "";
     }
 
     public void NewOp(int x, int y)
@@ -123,10 +132,12 @@ public class Controller : MonoBehaviour
         if (id == correctID)
         {
             win.SetActive(true);
+            speaker.PlayOneShot(audioWin);
         }
         else
         {
             lose.SetActive(true);
+            speaker.PlayOneShot(audioLose);
             StartCoroutine(ClearText());
         }
     }
@@ -134,16 +145,9 @@ public class Controller : MonoBehaviour
 
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventAR)
     {
-        String texto = "";
-        contador++;
-
-        bool change = true;
         if (eventAR.added.Count > 0)
         {
-            texto += "A:";
-            change = true;
 
-            try { 
             foreach (var trackedImage in eventAR.added)
             {
                 if (!m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
@@ -157,23 +161,13 @@ public class Controller : MonoBehaviour
                 }
                 m_InstantiatedName[trackedImage.referenceImage.guid] = trackedImage.referenceImage.name;
                 m_Cards.Add(trackedImage.referenceImage.guid);
-                texto += "-" + trackedImage.referenceImage.name;
-            }
-            }
-            catch (Exception ex)
-            {
-                texto = "Error: " + ex.Message;
             }
         }
 
         if (eventAR.updated.Count > 0)
         {
-            try
-            {
-                change = true;
                 foreach (var trackedImage in eventAR.updated)
                 {
-                    texto += "--U:";
                     if (trackedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
                     {
                         if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
@@ -195,38 +189,27 @@ public class Controller : MonoBehaviour
                         m_Cards.Add(trackedImage.referenceImage.guid);
                     } else
                     {
-                        texto += "--D:";
                         if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
                         {
                             var cubes = p.GetComponent<ObjectMesh>();
                             cubes.DisableCubes();
-                            p.SetActive(false);
+                            if (p.activeSelf) {
+                                UnTellNumber();
+                                p.SetActive(false);
+                            }
                         }
                         m_Cards.Remove(trackedImage.referenceImage.guid);
 
                     }
-                    texto += "-" + trackedImage.referenceImage.name + "-" + trackedImage.trackingState.ToString();
-                    change = true;
                 }
-            }catch (Exception ex)
-            {
-                texto = "Error: " + ex.Message;
-            }
         }
-
-
-        ControlTexts(change, contador + "::" + texto);
-
+        ControlTexts();
     }
 
 
-    private void ControlTexts(bool change, String texto)
+    private void ControlTexts()
     {
-        //CleanMarcadores();
-        //OPT2.text = texto;
         var guids = m_Cards.ToList();
-        String textoIzquierda = "";
-        String textoDerecha = "";
         if (guids.Count == 0)
         {
             CleanMarcadores();
@@ -242,23 +225,33 @@ public class Controller : MonoBehaviour
             if(lastNumb1 == -1 || lastNumb2 == -1)
             {
                 ToggleButton(true);
-                textoIzquierda = m_InstantiatedName[guids[0]];
-                textoDerecha = m_InstantiatedName[guids[1]];
-                if (isLeft(guids[1], guids[0]))
-                {
-                    textoIzquierda = m_InstantiatedName[guids[1]];
-                    textoDerecha = m_InstantiatedName[guids[0]];
-                }
-                firstNumber.text = GetNumber(textoIzquierda).ToString();
-                secondNumber.text = GetNumber(textoDerecha).ToString();
-                lastNumb1 = GetNumber(textoIzquierda);
-                lastNumb2 = GetNumber(textoDerecha);
+                var numbers = getNumbers();
+                firstNumber.text = numbers[0].ToString();
+                secondNumber.text = numbers[1].ToString();
+                lastNumb1 = numbers[0];
+                lastNumb2 = numbers[1];
                 sign.text = "+";
-                StartCoroutine(AudioNumber(GetNumber(textoIzquierda), GetNumber(textoDerecha)));
-                NewOp(GetNumber(textoIzquierda), GetNumber(textoDerecha));
+                NewOp(lastNumb1, lastNumb2);
 
             }
         }
+    }
+
+    private int[] getNumbers()
+    {
+        var guids = m_Cards.ToList();
+        var numbers = new int[guids.Count];
+
+        var textoIzquierda = m_InstantiatedName[guids[0]];
+        var textoDerecha = m_InstantiatedName[guids[1]];
+        if (isLeft(guids[1], guids[0]))
+        {
+            textoIzquierda = m_InstantiatedName[guids[1]];
+            textoDerecha = m_InstantiatedName[guids[0]];
+        }
+        numbers[0] = GetNumber(textoIzquierda);
+        numbers[1] = GetNumber(textoDerecha);
+        return numbers;
     }
 
     IEnumerator AudioNumber(int n1, int n2)
@@ -266,14 +259,30 @@ public class Controller : MonoBehaviour
         if(!flag)
         {
             flag = true;
+            yield return new WaitForSeconds(1.0f);
             speaker.PlayOneShot(numbers[n1 - 1]);
             yield return new WaitForSeconds(0.65f);
             speaker.PlayOneShot(sum);
             yield return new WaitForSeconds(0.65f);
             speaker.PlayOneShot(numbers[n2 - 1]);
-            flag = false;
         }
 
+    }
+
+    public void TellNumber(int n1)
+    {
+        speaker.PlayOneShot(numbers[n1 - 1]);
+        numberCounter++;
+        if (numberCounter == 2)
+        {
+            var numbers = getNumbers();
+            StartCoroutine(AudioNumber(numbers[0], numbers[1]));
+        }
+    }
+
+    public void UnTellNumber()
+    {
+        numberCounter--;
     }
 
     private void CleanMarcadores()
@@ -290,6 +299,7 @@ public class Controller : MonoBehaviour
         lastNumb1 = lastNumb2 = -1;
         win.SetActive(false);
         lose.SetActive(false);
+        flag = false;
     }
 
     private void ToggleButton(bool active)
@@ -309,13 +319,6 @@ public class Controller : MonoBehaviour
         var position1 = m_Instantiated[guid1].transform.position;
         return position0.x < position1.x;
     }
-
-    String getCoordenada(Guid guid)
-    {
-        var position = m_Instantiated[guid].transform.position;
-        return "(" + position.x + "," + position.y + "," + position.z + ")";
-    }
-
 
     private int GetNumber(String name)
     {

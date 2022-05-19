@@ -14,6 +14,8 @@ public class ObjectMesh : MonoBehaviour
     [SerializeField] private Vector3 initialTranslation;
     private int numberOfCubes;
     private bool visible = false;
+
+
     public void Awake()
     {
         if (finalScale == 0.0)
@@ -47,7 +49,7 @@ public class ObjectMesh : MonoBehaviour
             og.transform.localPosition += initialTranslation;
         }
         visible = false;
-        StartCoroutine(EnableCube());
+        EnableCubes();
     }
 
     public void EnableCubes()
@@ -60,13 +62,15 @@ public class ObjectMesh : MonoBehaviour
 
     private IEnumerator EnableCube()
     {
+        visible = true;
         for (int i = 0; i < numberOfCubes; i++)
         {
             positions[i].transform.DOScale(finalScale, 1f);
             yield return new WaitForSeconds(1.0f);
         }
-        visible = true;
+        Controller.Instance.TellNumber(numberOfCubes);
     }
+
     public void DisableCubes()
     {
         if (visible)
