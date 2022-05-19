@@ -7,11 +7,12 @@ public class ObjectMesh : MonoBehaviour
 
     private const float INITIAL_SCALE = 0.005f;
     private const float FINAL_SCALE = 0.03f;
-    [SerializeField] private GameObject prefab;
+    [SerializeField] private GameObject model;
     [SerializeField] private GameObject[] positions;
     [SerializeField] private float finalScale;
     [SerializeField] private Vector3 initialRotation;
     [SerializeField] private Vector3 initialTranslation;
+
     private int numberOfCubes;
     private bool visible = false;
 
@@ -32,35 +33,35 @@ public class ObjectMesh : MonoBehaviour
         }
     }
 
-    public void CreateCubes(int amount)
+    public void CreateFigures(int amount)
     {
-        StartCoroutine(RoutineCreateCubes(amount));
+        StartCoroutine(RoutineCreateFigures(amount));
     }
 
-    public IEnumerator RoutineCreateCubes(int amount)
+    public IEnumerator RoutineCreateFigures(int amount)
     {
         yield return new WaitForSeconds(0.5f);
         numberOfCubes = amount;
         for (int i = 0; i < amount; i++)
         {
             positions[i].SetActive(true);
-            var og = Instantiate(prefab, positions[i].transform);
+            var og = Instantiate(model, positions[i].transform);
             og.transform.Rotate(initialRotation);
             og.transform.localPosition += initialTranslation;
         }
         visible = false;
-        EnableCubes();
+        EnableFigures();
     }
 
-    public void EnableCubes()
+    public void EnableFigures()
     {
         if (!visible)
         {
-            StartCoroutine(EnableCube());
+            StartCoroutine(EnableFigure());
         }
     }
 
-    private IEnumerator EnableCube()
+    private IEnumerator EnableFigure()
     {
         visible = true;
         for (int i = 0; i < numberOfCubes; i++)
@@ -71,13 +72,13 @@ public class ObjectMesh : MonoBehaviour
         Controller.Instance.TellNumber(numberOfCubes);
     }
 
-    public void DisableCubes()
+    public void DisableFigures()
     {
         if (visible)
         {
             for (int i = 0; i < numberOfCubes; i++)
             {
-                positions[i].transform.DOScale(INITIAL_SCALE, 1f);
+                positions[i].transform.DOScale(INITIAL_SCALE, 0.1f);
             }
             visible = false;
         }

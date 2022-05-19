@@ -25,20 +25,20 @@ public class Controller : MonoBehaviour
     }
 
     [Header("Result")]
-    [SerializeField] private GameObject win;
-    [SerializeField] private GameObject lose;
+    [SerializeField] private GameObject winnerAnimation;
+    [SerializeField] private GameObject loserAnimation;
 
     [Header("Audio")]
     [SerializeField] public AudioSource speaker;
     [SerializeField] public AudioClip[] numbers;
-    [SerializeField] public AudioClip sum;
-    [SerializeField] public AudioClip audioWin;
-    [SerializeField] public AudioClip audioLose;
+    [SerializeField] public AudioClip sumSign;
+    [SerializeField] public AudioClip winnerAudio;
+    [SerializeField] public AudioClip loserAudio;
 
 
     [Header("Canvas")]
     [SerializeField] private TextMeshProUGUI[] awnser;
-    [SerializeField] private TextMeshProUGUI firstNumber, secondNumber, sign, endMessage;
+    [SerializeField] private TextMeshProUGUI firstNumber, secondNumber, sign;
 
     [Header("Images")]
     [SerializeField] private GameObject[] prefabs;
@@ -48,25 +48,24 @@ public class Controller : MonoBehaviour
     Dictionary<Guid, GameObject> m_Instantiated = new Dictionary<Guid, GameObject>();
     Dictionary<Guid, String> m_InstantiatedName = new Dictionary<Guid, String>();
     HashSet<Guid> m_Cards = new HashSet<Guid>();
-    List<int> indexPrefabs;
 
+    List<int> indexPrefabs;
     private int numberCounter;
     private ParticleSystem confetti;
 
-    Operation op;
-    int correctID;
-    int contador = 0;
-    int lastSum = 0;
-    bool flag;
+    Operation operation;
 
+    int correctID;
+    int lastSum = 0;
+    bool flagAudio;
     int lastNumb1, lastNumb2;
 
     private void Awake()
     {
-        flag = false;
+        flagAudio = false;
         Instance = this;
         indexPrefabs = Utils.RandomListOfInt(0, prefabs.Length, 9);
-        confetti = win.GetComponentInChildren<ParticleSystem>();
+        confetti = winnerAnimation.GetComponentInChildren<ParticleSystem>();
         lastNumb1 = lastNumb2 = -1;
         numberCounter = 0;
     }
@@ -83,7 +82,7 @@ public class Controller : MonoBehaviour
 
     private void Update()
     {
-        if (win.activeSelf && confetti)
+        if (winnerAnimation.activeSelf && confetti)
         {
             confetti.transform.position = arCamera.transform.position + arCamera.transform.forward * 1.0f +  arCamera.transform.up * 0.7f;
         }
@@ -94,51 +93,50 @@ public class Controller : MonoBehaviour
         m_TrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
     }
 
-    IEnumerator ClearText()
+    IEnumerator ClearError()
     {
         yield return new WaitForSeconds(2);
-        lose.SetActive(false);
+        loserAnimation.SetActive(false);
     }
 
-    public void NewOp(int x, int y)
+
+    public void NewOperation(int x, int y)
     {
         if (x + y == lastSum)
         {
             return;
         }
 
-        op = new Operation();
-        op = op.Addition(x,y);
-
-        lastSum = op.z;
-
+        operation = new Operation();
+        operation = operation.Addition(x,y);
+        lastSum = operation.z;
         correctID = UnityEngine.Random.Range(0, 3);
         
         for(int i = 0; i < 3; i++)
         {
             var tmp = UnityEngine.Random.Range(2, 19);
-            while (tmp == op.z)
+            while (tmp == operation.z)
             {
                 tmp = UnityEngine.Random.Range(2, 19);
             }
 
             awnser[i].text = tmp.ToString();
         }
-        awnser[correctID].text = op.z.ToString();
+        awnser[correctID].text = operation.z.ToString();
     }
 
     public void CheckAwnser(int id)
     {
         if (id == correctID)
         {
-            win.SetActive(true);
-            speaker.PlayOneShot(audioWin);
+            winnerAnimation.SetActive(true);
+            speaker.PlayOneShot(winnerAudio);
         }
         else
         {
-            lose.SetActive(true);
-            speaker.PlayOneShot(audioLose);
-            StartCoroutine(ClearText());
+            loserAnimation.SetActive(true);
+            speaker.PlayOneShot(loserAudio);
+            StartCoroutine(ClearError());
         }
     }
 
@@ -156,7 +154,7 @@ public class Controller : MonoBehaviour
                     var prefab = Instantiate(prefabs[prefabIndex], trackedImage.transform);
                     var cubes = prefab.GetComponent<ObjectMesh>();
                     prefab.SetActive(true);
-                    cubes.CreateCubes(GetNumber(trackedImage.referenceImage.name));
+                    cubes.CreateFigures(GetNumber(trackedImage.referenceImage.name));
                     m_Instantiated[trackedImage.referenceImage.guid] = cubes.gameObject;
                 }
                 m_InstantiatedName[trackedImage.referenceImage.guid] = trackedImage.referenceImage.name;
@@ -174,7 +172,7 @@ public class Controller : MonoBehaviour
                         {
                             p.SetActive(true);
                             var cubes = p.GetComponent<ObjectMesh>();
-                            cubes.EnableCubes();
+                            cubes.EnableFigures();
                         }
                         else
                         {
@@ -182,7 +180,7 @@ public class Controller : MonoBehaviour
                             var prefab = Instantiate(prefabs[prefabIndex], trackedImage.transform);
                             var cubes = prefab.GetComponent<ObjectMesh>();
                             prefab.SetActive(true);
-                            cubes.CreateCubes(GetNumber(trackedImage.referenceImage.name));
+                            cubes.CreateFigures(GetNumber(trackedImage.referenceImage.name));
                             m_Instantiated[trackedImage.referenceImage.guid] = cubes.gameObject;
 
                         }
@@ -192,9 +190,10 @@ public class Controller : MonoBehaviour
                         if (m_Instantiated.TryGetValue(trackedImage.referenceImage.guid, out var p))
                         {
                             var cubes = p.GetComponent<ObjectMesh>();
-                            cubes.DisableCubes();
-                            if (p.activeSelf) {
-                                UnTellNumber();
+                            cubes.DisableFigures();
+                            if (p.activeSelf)
+                            {
+                                numberCounter--;
                                 p.SetActive(false);
                             }
                         }
@@ -203,35 +202,36 @@ public class Controller : MonoBehaviour
                     }
                 }
         }
-        ControlTexts();
+        ControlOperation();
     }
 
 
-    private void ControlTexts()
+    private void ControlOperation()
     {
         var guids = m_Cards.ToList();
         if (guids.Count == 0)
         {
-            CleanMarcadores();
+            CleanMarkers();
+            numberCounter = 0;
             return;
         }
         else if (guids.Count == 1)
         {
-            CleanMarcadores();
+            CleanMarkers();
             sign.text = m_InstantiatedName[guids[0]].Substring(6);
         }
         else
         {
             if(lastNumb1 == -1 || lastNumb2 == -1)
             {
-                ToggleButton(true);
+                ToggleButtons(true);
                 var numbers = getNumbers();
                 firstNumber.text = numbers[0].ToString();
                 secondNumber.text = numbers[1].ToString();
                 lastNumb1 = numbers[0];
                 lastNumb2 = numbers[1];
                 sign.text = "+";
-                NewOp(lastNumb1, lastNumb2);
+                NewOperation(lastNumb1, lastNumb2);
 
             }
         }
@@ -254,15 +254,15 @@ public class Controller : MonoBehaviour
         return numbers;
     }
 
-    IEnumerator AudioNumber(int n1, int n2)
+    IEnumerator TellOperation(int n1, int n2)
     {
-        if(!flag)
+        if(!flagAudio)
         {
-            flag = true;
+            flagAudio = true;
             yield return new WaitForSeconds(1.0f);
             speaker.PlayOneShot(numbers[n1 - 1]);
             yield return new WaitForSeconds(0.65f);
-            speaker.PlayOneShot(sum);
+            speaker.PlayOneShot(sumSign);
             yield return new WaitForSeconds(0.65f);
             speaker.PlayOneShot(numbers[n2 - 1]);
         }
@@ -276,16 +276,11 @@ public class Controller : MonoBehaviour
         if (numberCounter == 2)
         {
             var numbers = getNumbers();
-            StartCoroutine(AudioNumber(numbers[0], numbers[1]));
+            StartCoroutine(TellOperation(numbers[0], numbers[1]));
         }
     }
 
-    public void UnTellNumber()
-    {
-        numberCounter--;
-    }
-
-    private void CleanMarcadores()
+    private void CleanMarkers()
     {
         awnser[0].text = "";
         awnser[1].text = "";
@@ -294,15 +289,14 @@ public class Controller : MonoBehaviour
         firstNumber.text = "";
         secondNumber.text = "";
         sign.text = "";
-        endMessage.text = "";
-        ToggleButton(false);
+        ToggleButtons(false);
         lastNumb1 = lastNumb2 = -1;
-        win.SetActive(false);
-        lose.SetActive(false);
-        flag = false;
+        winnerAnimation.SetActive(false);
+        loserAnimation.SetActive(false);
+        flagAudio = false;
     }
 
-    private void ToggleButton(bool active)
+    private void ToggleButtons(bool active)
     {
         awnser[0].transform.parent.transform.parent.gameObject.SetActive(active);
         awnser[0].transform.parent.gameObject.SetActive(active);

@@ -1223,7 +1223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fec507b4df345b419d675db030889c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 78311708}
-  arSession: {fileID: 41641305}
+  buttonAnimatior: {fileID: 78311708}
+  aRSession: {fileID: 41641305}
   errorMessage: {fileID: 1408280210}
   button: {fileID: 78311703}

@@ -7,8 +7,8 @@ using UnityEngine.XR.ARFoundation;
 
 public class MenuSUMAR : MonoBehaviour
 {
-    [SerializeField] private Animator anim;
-    [SerializeField] private ARSession arSession;
+    [SerializeField] private Animator buttonAnimatior;
+    [SerializeField] private ARSession aRSession;
     [SerializeField] private TextMeshProUGUI errorMessage;
     [SerializeField] private GameObject button;
 
@@ -31,7 +31,7 @@ public class MenuSUMAR : MonoBehaviour
         else
         {
             // Start the AR session
-            arSession.enabled = true;
+            aRSession.enabled = true;
             button.SetActive(true);
         }
     }
@@ -44,7 +44,7 @@ public class MenuSUMAR : MonoBehaviour
 
     IEnumerator LoadGame()
     {
-        anim.Play("ButtonsUI");
+        buttonAnimatior.Play("ButtonsUI");
         yield return new WaitForSeconds(.5f);
         SceneManager.LoadScene("Game");
     }
